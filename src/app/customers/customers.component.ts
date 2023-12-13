@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { CustomerService } from '../services/customer.service';
+import { Observable, catchError } from 'rxjs';
+import { Customer } from '../model/customer.model';
 
 @Component({
   selector: 'app-customers',
@@ -8,15 +11,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomersComponent implements OnInit {
 
-  constructor(private http:HttpClient){}
+  constructor(private  CustomerService:CustomerService){}
 
-  customers:any
+  customers! :  Observable<Array<Customer>>;
+  errorMessage! : object;
 
   ngOnInit(): void {
-    this.http.get("http://localhost:8081/customers/getAll").subscribe(data=>{
-      this.customers=data;},
-      error=>{
-        console.log("problem de colecter le customers")
-      })
-  }
+    this.customers = this.CustomerService.getAllCustomers().pipe(
+      catchError(err => {
+        this.errorMessage = err; return [];
+      } ));
+    }
+
+
 }
