@@ -1,23 +1,47 @@
 <div class="container mt-2">
-  <div class="card" *ngIf="customers">
+
+  <ng-container *ngIf="customers | async as customers; else loadingOrError">
+    <div class="card text-center text-uppercase">
       <div class="card-header">Customers List</div>
       <div class="card-body">
         <table class="table table-hover">
           <thead>
-          <tr>
-            <th>ID</th><th>Name</th><th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let customer of customers">
-            <td>{{customer.id}}</td>
-            <td>{{customer.name}}</td>
-            <td>{{customer.email}}</td>
-          </tr>
-        </tbody>
-      </table>
+            <tr>
+              <th>ID</th><th>Name</th><th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let customer of customers">
+              <td>{{customer.id}}</td>
+              <td>{{customer.name}}</td>
+              <td>{{customer.email}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-  </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrError>
+    <div class="text-center ">
+
+      <ng-container *ngIf="errorMessage; else loading">
+        <div class="alert alert-danger" role="alert">
+          <strong>Error:</strong> {{ errorMessage }}
+        </div>
+      </ng-container>
+      
+      <ng-template #loading>
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div>
+            <strong>Loading...</strong>
+          </div>
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-template>
 </div>
-
-
